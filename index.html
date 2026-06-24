@@ -1082,7 +1082,7 @@
       <div class="hero-carousel-wrap">
         <div class="hero-carousel-inner" id="hero-carousel-inner">
           <div class="hero-slide active">
-            <a href="javascript:void(0)" onclick="document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
+            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
             <picture>
               <source media="(max-width: 639px)" srcset="https://kitasystems.com/wp-content/uploads/2026/06/ChatGPT-Image-Jun-23-2026-11_54_11-AM.png" />
               <img
@@ -1093,7 +1093,7 @@
             </picture>
           </div>
           <div class="hero-slide">
-            <a href="javascript:void(0)" onclick="document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
+            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
             <picture>
               <source media="(max-width: 639px)" srcset="https://kitasystems.com/wp-content/uploads/2026/06/ChatGPT-Image-Jun-23-2026-11_54_11-AM.png" />
               <img
@@ -1104,7 +1104,7 @@
             </picture>
           </div>
           <div class="hero-slide">
-            <a href="javascript:void(0)" onclick="document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
+            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('homepage-solutions').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hero-explore-overlay" aria-label="Explore Solutions">Explore Solutions</a>
             <picture>
               <source media="(max-width: 639px)" srcset="https://kitasystems.com/wp-content/uploads/2026/06/ChatGPT-Image-Jun-23-2026-11_54_11-AM.png" />
               <img
@@ -1815,6 +1815,18 @@
 
         // Slider logic removed as we now use a single banner image.
 
+        // Capturing click listener to prevent React Router from intercepting "Explore Solutions" button clicks
+        document.addEventListener("click", function (e) {
+          if (e.target && e.target.classList && e.target.classList.contains("hero-explore-overlay")) {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetEl = document.getElementById("homepage-solutions");
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }
+        }, true);
+
         // Click handler for smoothly navigating to '/contact'
         document.addEventListener("click", function (e) {
           if (e.target && e.target.id === "request-quote-cta-btn") {
@@ -1825,7 +1837,9 @@
             if (headerContactLink) {
               headerContactLink.click();
             } else {
-              history.pushState({}, "", "/contact");
+              const base = window.getBasename ? window.getBasename() : "/";
+              const targetPath = base === "/" ? "/contact" : (base + "/contact").replace(/\/+/g, "/");
+              history.pushState({}, "", targetPath);
               window.dispatchEvent(new Event("popstate"));
             }
           }
@@ -2508,7 +2522,13 @@ function EuphoriaProductDetailsComponent({n}) {
                   children: [
                     o.jsx("div", { className: "w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-extrabold", children: "✓" }),
                     o.jsx("h3", { className: "text-2xl font-bold text-gray-900", children: "Enquiry Submitted Successfully!" }),
-                    o.jsx("p", { className: "text-gray-600", children: "Thank you for reaching out. A premium water-ionizer specialist will contact you shortly." })
+                    o.jsx("p", { className: "text-gray-600", children: "Thank you for reaching out. A premium water-ionizer specialist will contact you shortly." }),
+                    o.jsx("button", {
+                      type: "button",
+                      onClick: () => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', message: '' }); },
+                      className: "mt-6 inline-flex items-center justify-center px-6 py-3 bg-[#1a2b66] text-white font-semibold rounded-xl hover:bg-[#111e4a] transition-all shadow-md text-sm cursor-pointer",
+                      children: "Submit Another Enquiry"
+                    })
                   ]
                 }) : o.jsxs("form", {
                   onSubmit: (e) => { e.preventDefault(); setSubmitted(true); },
