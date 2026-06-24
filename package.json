@@ -1,0 +1,13 @@
+{
+  "name": "static-site",
+  "version": "1.0.0",
+  "description": "Static HTML Export",
+  "scripts": {
+    "dev": "npx -y serve . -l 3000",
+    "start": "npx -y serve . -l 3000",
+    "build": "npx -y shx rm -rf dist && npx -y shx mkdir -p dist && npx -y shx cp index.html dist/ && npx -y shx cp -r src dist/src && npx -y shx cp -r assets dist/assets || true"
+  },
+  "dependencies": {
+    "acorn": "^8.17.0"
+  }
+}
