@@ -135,22 +135,24 @@
       }
 
       /* Replace Header Text with Logo Image */
-      #root > div > header > div > div:first-child > a:first-child {
+      .site-header a[href="/"],
+      .site-header a.tracking-tight {
         font-size: 0 !important;
         color: transparent !important;
-        display: inline-flex;
-        width: 120px;
-        height: 28px;
-        background-image: url("https://kitasystems.com/wp-content/uploads/2024/02/logo-1.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: left center;
+        display: inline-flex !important;
+        width: 120px !important;
+        height: 28px !important;
+        background-image: url("https://kitasystems.com/wp-content/uploads/2024/02/logo-1.png") !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: left center !important;
         text-decoration: none !important;
       }
       @media (min-width: 640px) {
-        #root > div > header > div > div:first-child > a:first-child {
-          width: 180px;
-          height: 42px;
+        .site-header a[href="/"],
+        .site-header a.tracking-tight {
+          width: 180px !important;
+          height: 42px !important;
         }
       }
 
@@ -1813,7 +1815,43 @@
 
         // Removed MutationObserver to prevent infinite update loops with React DOM
 
-        // Slider logic removed as we now use a single banner image.
+        // Automated and Interactive Hero Slider Logic
+        let currentSlideIndex = 0;
+        const totalSlides = 3;
+
+        window.setHeroSlide = function(index) {
+          currentSlideIndex = (index + totalSlides) % totalSlides;
+          const container = document.getElementById("hero-carousel-inner");
+          if (container) {
+            container.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+          }
+          const dots = document.querySelectorAll(".hero-carousel-dots .dot");
+          dots.forEach((dot, idx) => {
+            if (idx === currentSlideIndex) {
+              dot.classList.add("active");
+            } else {
+              dot.classList.remove("active");
+            }
+          });
+        };
+
+        window.moveHeroSlide = function(step) {
+          window.setHeroSlide(currentSlideIndex + step);
+        };
+
+        let sliderInterval = setInterval(() => {
+          window.moveHeroSlide(1);
+        }, 5000);
+
+        const carouselWrap = document.querySelector(".hero-carousel-wrap");
+        if (carouselWrap) {
+          carouselWrap.addEventListener("click", () => {
+            clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+              window.moveHeroSlide(1);
+            }, 5000);
+          });
+        }
 
         // Capturing click listener to prevent React Router from intercepting "Explore Solutions" button clicks
         document.addEventListener("click", function (e) {
