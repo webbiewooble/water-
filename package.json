@@ -8,6 +8,7 @@
     "build": "npx -y shx rm -rf dist && npx -y shx mkdir -p dist && npx -y shx cp index.html dist/ || true"
   },
   "dependencies": {
-    "acorn": "^8.17.0"
+    "acorn": "^8.17.0",
+    "jsdom": "^29.1.1"
   }
 }
